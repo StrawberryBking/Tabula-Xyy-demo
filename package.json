@@ -1,0 +1,23 @@
+{
+  "name": "tabula",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Mico-rstar/Tabula#readme",
+  "bugs": {
+    "url": "https://github.com/Mico-rstar/Tabula/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Mico-rstar/Tabula.git"
+  },
+  "license": "MIT",
+  "author": "tabula",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^33.3.1"
+  }
+}
