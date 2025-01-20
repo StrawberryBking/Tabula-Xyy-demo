@@ -1,24 +1,66 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('node:path')
+import { app, BrowserWindow, Menu, ipcMain } from 'electron'
+import path from 'node:path'
+import url from 'url'
+//import path from 'path'
+
+
+let __filename = url.fileURLToPath(import.meta.url)
+let __dirname = path.dirname(__filename)
 
 const createWindow = () => {
     // Create the browser window.
+    console.log('createWindow')
     const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        show: false,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js')
+            nodeIntegration: true, //允许在渲染进程中直接使用 Node.js API
+            contextIsolation: true, //启用上下文隔 (提高安全性)
+            preload: path.resolve(__dirname, 'preload.mjs'),
+
         }
     })
 
+    // 定义菜单模板
+    const template = [
+        {
+            label: 'File',
+            submenu: [
+                {
+                    label: 'Save',
+                    accelerator: 'CmdOrCtrl+S', // 使用 Cmd+S (Mac) 或 Ctrl+S (Windows/Linux)
+                    click: () => {
+                        // 在这里添加保存文件的逻辑
+                        console.log('Save file clicked')
+                        mainWindow.webContents.send('save-file', 1);
+                    }
+                },
+                {
+                    label: 'Quit',
+                    accelerator: 'CmdOrCtrl+Q',
+                    click: () => {
+                        app.quit()
+                    }
+                }
+            ]
+        }
+    ]
+    // 构建并设置菜单
+    const menu = Menu.buildFromTemplate(template)
+    Menu.setApplicationMenu(menu)
+
     // 加载 index.html
     mainWindow.loadFile('index.html')
+    mainWindow.on('ready-to-show', () => {
+        mainWindow.show()
+    })
 
     // 打开开发工具
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 }
 
 // 这段程序将会在 Electron 结束初始化
