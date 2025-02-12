@@ -1,4 +1,3 @@
-
 import EditorJS from './editor/editorjs.mjs';
 import Header from './editor/header.mjs';
 import Embed from './editor/embed.mjs';
@@ -40,6 +39,39 @@ window.DRAPI.saveFile((value) => {
 }
 )
 
+// 封装获取指定索引块ID的函数
+function getBlockIdByIndex(index) {
+    const block = editor.blocks.getBlockByIndex(index);
+    return block ? block.id : null;
+}
+
+// 封装在指定索引位置插入块的函数
+function insertBlockAtIndex(type, data, index) {
+    editor.blocks.insert(type, data, {}, index, true);
+}
+
+// 封装获取指定ID对应块位置的函数
+function getBlockIndexById(id) {
+    const blocks = editor.blocks.getBlocksCount();
+    for (let i = 0; i < blocks; i++) {
+        const block = editor.blocks.getBlockByIndex(i);
+        if (block && block.id === id) {
+            return i;
+        }
+    }
+    return -1; // 如果未找到返回-1
+}
+
+// 封装更新指定ID块的函数
+function updateBlockById(id, newData) {
+    const index = getBlockIndexById(id);
+    if (index !== -1) {
+        editor.blocks.update(index, newData);
+    } else {
+        console.log(`未找到ID为${id}的块`);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
 
     const clearButton = document.getElementById('clear');
@@ -53,14 +85,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     const insertButton = document.getElementById('insert');
     insertButton.addEventListener('click', async () => {
         console.log('insert data')
-        editor.blocks.insert("header", { text: "hello world" }, {}, 0, true)
+        insertBlockAtIndex("header", { text: "hello world" }, 0);
     });
 
     const getIDButton = document.getElementById('getID');
     getIDButton.addEventListener('click', async () => {
         console.log('getID')
-        const id = editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()).id
-        console.log('id', id)
+        const currentIndex = editor.blocks.getCurrentBlockIndex();
+        const id = getBlockIdByIndex(currentIndex);
+        console.log('id', id);
+    });
+
+    // 获取某个ID对应的块的位置
+    const getIndexButton = document.getElementById('getIndex');
+    getIndexButton.addEventListener('click', async () => {
+        const id = 'your-block-id'; // 替换为实际的块ID
+        const index = getBlockIndexById(id);
+        console.log('index', index);
+    });
+
+    // 更新某个ID的块
+    const updateButton = document.getElementById('update');
+    updateButton.addEventListener('click', async () => {
+        const id = 'your-block-id'; // 替换为实际的块ID
+        const newData = { text: "updated text" }; // 替换为实际的新数据
+        updateBlockById(id, newData);
     });
 });
 
