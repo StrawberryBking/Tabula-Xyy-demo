@@ -1,6 +1,7 @@
-import { clearPendingMessage } from "./sender.mjs";
+import { clearPendingMessage } from "./sender.mjs";//导入清除消息函数
 //msgHandlers
-export const messageHandlers = {
+export const messageHandlers = {//消息处理函数
+    //处理服务端发送的消息
     "test": (data, ws, editor) => {
         console.log('处理 test 消息:', data);
     },
@@ -18,8 +19,7 @@ export const messageHandlers = {
     }
 };
 
-
-
+//确认消息
 function confirm(ws, requestId) {
     ws.send(JSON.stringify({
         type: "confirm",
