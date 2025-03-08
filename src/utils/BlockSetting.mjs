@@ -157,7 +157,16 @@ class BlockSetting {
         }
     }
 
+    //清理其他块绑定的工作流
+    clearFlowContent() {
+        const flowContainer = document.getElementById('workflow-content');
+        flowContainer.innerHTML = '';
+        flowContainer.style.display = 'none';
+
+    }
+
     async init() {
+        this.clearFlowContent();
         this.switchOption();
         this.setBlockName();
         this.addFlowListener();

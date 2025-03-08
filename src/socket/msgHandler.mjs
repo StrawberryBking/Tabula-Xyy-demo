@@ -1,4 +1,4 @@
-import { clearPendingMessage } from "./sender.mjs";//导入清除消息函数
+
 //msgHandlers
 export const messageHandlers = {//消息处理函数
     //处理服务端发送的消息
@@ -14,7 +14,7 @@ export const messageHandlers = {//消息处理函数
         console.log('处理服务端回复消息:', data);
         // 清除已处理的消息
         if (data.requestId) {
-            clearPendingMessage(data.requestId);
+            window.parent.DRAPI.emit("confirm" + data.requestId, data);
         }
     }
 };

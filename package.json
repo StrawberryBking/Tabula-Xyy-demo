@@ -33,6 +33,7 @@
     "@editorjs/inline-code": "^1.5.1",
     "@editorjs/list": "^2.0.3",
     "drawflow": "^0.0.60",
+    "eventemitter3": "^5.0.1",
     "lit-element": "^4.1.1"
   }
 }

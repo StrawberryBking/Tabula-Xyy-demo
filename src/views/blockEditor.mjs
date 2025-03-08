@@ -2,7 +2,7 @@
 import EditorJS from '../editor/editorjs.mjs';
 import Header from '../editor/block/header.mjs';
 import { messageHandlers } from '../socket/msgHandler.mjs';
-import { sendMessageWithRetry } from '../socket/sender.mjs';
+import { sendMessageWithRetry, sendMsgWithRes } from '../socket/sender.mjs';
 import Button from '../editor/block/button.mjs';
 import MarkerTool from '../editor/inlineTool/inlineTool.mjs';
 import MyBlockTune from '../editor/blockTune/blockTune.mjs';
@@ -15,6 +15,7 @@ import Checklist from '../editor/block/checklist.mjs'
 import SimpleImage from '../editor/block/simple-image.mjs';
 import { Controller } from '../Controller/Controller.mjs';
 import { Runner } from '../Runner/Runner.mjs';
+import MySocket from '../socket/MySocket.mjs';
 
 
 const idIndexMap = {};
@@ -115,24 +116,11 @@ var editor = new EditorJS({
 })
 
 //WebSocket通信
-const ws = new WebSocket("ws://127.0.0.1:5200/");
-ws.onopen = function (event) {
-    console.log('websocket已连接', ws);
-    sendMessageWithRetry(ws, { type: 'test-from-client', data: {} });
-
-};
-ws.onmessage = function (event) {
-    try {
-        const data = JSON.parse(event.data);
-        console.log('收到服务端的消息：', data);
-        messageHandlers[data.type](data, ws, editor);
-
-    } catch (e) { console.log("parse-serverinfo-err", e) }
-
-};
-ws.onclose = function (event) {
-    alert("连接已关闭...");
-};
+const ws = new MySocket("ws://127.0.0.1:5200/");
+ws.sendMsg({ type: 'test-from-client', data: {} }).then((data) => {
+    console.log('服务端回复', data);
+})
+window.ws = ws;
 
 
 //建立id与index映射

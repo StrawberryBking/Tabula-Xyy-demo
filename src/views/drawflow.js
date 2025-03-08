@@ -50,9 +50,13 @@ const workflowContainer = new Maintainer();
 
 //save data
 document.getElementsByClassName("btn-save")[0].addEventListener("click", function () {
-  console.log(editor.export());
+  const flowData = editor.export();
   console.log(workflowContainer.get()[workflowContainer.getId()]);
-  workflowContainer.get()[workflowContainer.getId()].data = editor.export();
+  workflowContainer.get()[workflowContainer.getId()].data = flowData;
+
+  //将flowData转化为工作流引擎接口接收的格式
+  transformFlowData(flowData);
+
 });
 
 /* DRAG EVENT */
@@ -283,6 +287,8 @@ document.addEventListener('DOMContentLoaded', function () {
     error_code: "String",
     error_msg: "String"
   };
+
+  //在侧边栏动态展示输出
   const container = document.getElementById('args-output-container');
 
   for (const [key, value] of Object.entries(data)) {
@@ -364,10 +370,30 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
+  //动态添加节点
+  const nodeList = document.getElementById("node-list");
+  nodeList.appendChild(createNodeItem('start', '开始'));
+  nodeList.appendChild(createNodeItem('end', '结束'));
+  nodeList.appendChild(createNodeItem('test', '测试'));
+  //window.ws.sendMsg
+
 });
 
 
-
+/* <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="start">
+  <span>开始</span>
+</div> */
+function createNodeItem(type, name) {
+  const item = document.createElement('div');
+  item.className = 'drag-drawflow';
+  item.setAttribute('draggable', 'true');
+  item.setAttribute('ondragstart', 'drag(event)');
+  item.setAttribute('data-node', type);
+  item.innerHTML = `
+    <span>`+ name + `</span>
+  `;
+  return item;
+}
 
 
 function showSidebar(event) {
@@ -425,6 +451,13 @@ function delFlowListItem(event) {
   renderWorklist();
 }
 
+
+
+
+// 将flowData转换为符合工作流引擎接口的格式
+function transformFlowData(flowData) {
+
+}
 
 
 
